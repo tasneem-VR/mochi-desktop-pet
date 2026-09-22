@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mochi - Desktop Pet</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eee7df;
+            color: #4b4038;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           MAIN GAME
+        ========================= */
+
+        .game {
+            width: 900px;
+            max-width: 95%;
+
+            background: #fffaf5;
+
+            border-radius: 25px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+
+        /* =========================
+           ROOM
+        ========================= */
+
+        .room {
+            height: 480px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background: #ded4c9;
+
+            transition:
+                background 1s ease;
+        }
+
+
+        /* =========================
+           WINDOW
+        ========================= */
+
+        .window {
+            position: absolute;
+
+            width: 260px;
+            height: 170px;
+
+            top: 40px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            background: #b9d9ed;
+
+            border: 12px solid #f7f2eb;
+
+            border-radius: 15px;
+
+            transition:
+                background 1s ease;
+        }
+
+
+        .window::before {
+            content: "";
+
+            position: absolute;
+
+            width: 5px;
+            height: 100%;
+
+            background: #f7f2eb;
+
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+        }
+
+
+        .window::after {
+            content: "";
+
+            position: absolute;
+
+            width: 100%;
+            height: 5px;
+
+            background: #f7f2eb;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+        }
+
+
+        /* =========================
+           SUN
+        ========================= */
+
+        .sun {
+            position: absolute;
+
+            top: 65px;
+            right: 300px;
+
+            font-size: 42px;
+
+            transition:
+                opacity 1s ease;
+        }
+
+
+        /* =========================
+           PLANT
+        ========================= */
+
+        .plant {
+            position: absolute;
+
+            bottom: 143px;
+            left: 60px;
+
+            font-size: 65px;
+        }
+
+
+        /* =========================
+           BOOKS
+        ========================= */
+
+        .books {
+            position: absolute;
+
+            bottom: 130px;
+            right: 60px;
+
+            font-size: 55px;
+        }
+
+
+        /* =========================
+           DESK
+        ========================= */
+
+        .desk {
+            position: absolute;
+
+            bottom: 0;
+
+            width: 100%;
+            height: 135px;
+
+            background: #9c765b;
+        }
+
+
+        .desk-top {
+            position: absolute;
+
+            top: -15px;
+
+            width: 100%;
+            height: 20px;
+
+            background: #805d45;
+        }
+
+
+        /* =========================
+           MOCHI
+        ========================= */
+
+        .mochi {
+            position: absolute;
+
+            bottom: 120px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            cursor: pointer;
+
+            user-select: none;
+
+            z-index: 5;
+
+            transition:
+                left 2s linear,
+                bottom 0.5s ease,
+                transform 0.2s ease,
+                filter 0.2s ease;
+        }
+
+
+        .mochi img {
+            width: 170px;
+
+            height: auto;
+
+            display: block;
+
+            pointer-events: none;
+        }
+
+
+        .mochi:hover {
+            transform:
+                translateX(-50%) scale(1.05);
+        }
+
+
+        /* =========================
+           IDLE ANIMATION
+        ========================= */
+
+        .mochi.idle {
+            animation:
+                idleBounce 2.5s ease-in-out infinite;
+        }
+
+
+        @keyframes idleBounce {
+
+            0% {
+                transform:
+                    translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform:
+                    translateX(-50%) translateY(-4px);
+            }
+
+            100% {
+                transform:
+                    translateX(-50%) translateY(0);
+            }
+        }
+
+
+        /* =========================
+           MOCHI EXPRESSIONS
+        ========================= */
+
+        .mochi.happy {
+            filter:
+                drop-shadow(0 5px 5px rgba(255, 170, 190, 0.35));
+        }
+
+
+        .mochi.hungry {
+            filter:
+                drop-shadow(0 5px 5px rgba(220, 170, 100, 0.35));
+        }
+
+
+        .mochi.sleepy {
+            filter:
+                drop-shadow(0 5px 5px rgba(120, 100, 180, 0.35));
+        }
+
+
+        .mochi.grumpy {
+            filter:
+                drop-shadow(0 5px 5px rgba(170, 100, 100, 0.35));
+        }
+
+
+        /* =========================
+           BOUNCE
+        ========================= */
+
+        .mochi.bounce {
+            animation:
+                bounce 0.4s;
+        }
+
+
+        @keyframes bounce {
+
+            0% {
+                transform:
+                    translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform:
+                    translateX(-50%) translateY(-25px);
+            }
+
+            100% {
+                transform:
+                    translateX(-50%) translateY(0);
+            }
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message {
+            position: absolute;
+
+            top: 20px;
+            right: 20px;
+
+            background: white;
+
+            padding: 12px 18px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.1);
+
+            font-size: 15px;
+
+            z-index: 10;
+
+            max-width: 230px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           CONTROL PANEL
+        ========================= */
+
+        .panel {
+            margin-top: 20px;
+
+            text-align: center;
+        }
+
+
+        .panel h1 {
+            margin-bottom: 5px;
+        }
+
+
+        /* =========================
+           MOOD
+        ========================= */
+
+        .mood {
+            font-size: 14px;
+
+            color: #8b7b70;
+
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            margin: 20px auto;
+
+            flex-wrap: wrap;
+        }
+
+
+        .stat {
+            background: #f5eee8;
+
+            padding: 12px 20px;
+
+            border-radius: 14px;
+
+            min-width: 130px;
+        }
+
+
+        .stat span {
+            display: block;
+
+            font-size: 14px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .stat strong {
+            font-size: 20px;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .buttons {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        button {
+            border: none;
+
+            background: #ead8d0;
+
+            color: #4b4038;
+
+            padding: 12px 20px;
+
+            border-radius: 12px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        button:hover {
+            transform:
+                translateY(-2px);
+
+            background: #dfc2b8;
+        }
+
+
+        button:active {
+            transform:
+                translateY(1px);
+        }
+
+
+        button:disabled {
+            opacity: 0.45;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =========================
+           NIGHT MODE
+        ========================= */
+
+        .night {
+            background: #55505c;
+        }
+
+
+        .night .window {
+            background: #343746;
+        }
+
+
+        .night .sun {
+            opacity: 0;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .room {
+                height: 420px;
+            }
+
+
+            .window {
+                width: 200px;
+                height: 130px;
+            }
+
+
+            .mochi img {
+                width: 90px;
+            }
+
+
+            .plant {
+                left: 25px;
+
+                font-size: 50px;
+            }
+
+
+            .books {
+                right: 25px;
+
+                font-size: 40px;
+            }
+
+
+            .sun {
+                right: 30px;
+
+                font-size: 32px;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="game">
+
+
+        <!-- =========================
+             ROOM
+        ========================= -->
+
+        <div class="room" id="room">
+
+
+            <!-- WINDOW -->
+
+            <div class="window"></div>
+
+
+            <!-- SUN -->
+
+            <div class="sun">
+                ☀️
+            </div>
+
+
+            <!-- PLANT -->
+
+            <div class="plant">
+                🪴
+            </div>
+
+
+            <!-- BOOKS -->
+
+            <div class="books">
+                📚
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div class="message" id="message">
+                Hi! I'm Mochi! 🐾
+            </div>
+
+
+            <!-- MOCHI -->
+
+            <div class="mochi idle" id="mochi" onclick="pet()">
+
+                <img id="mochiImage" src="Mochi/normal.png" alt="Mochi">
+
+            </div>
+
+
+            <!-- DESK -->
+
+            <div class="desk">
+
+                <div class="desk-top"></div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             CONTROL PANEL
+        ========================= -->
+
+        <div class="panel">
+
+
+            <h1>
+                🐾 Mochi
+            </h1>
+
+
+            <div class="mood" id="mood">
+                Mochi is feeling okay
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="stats">
+
+
+                <div class="stat">
+
+                    <span>
+                        ❤️ Happiness
+                    </span>
+
+                    <strong id="happiness">
+                        50
+                    </strong>%
+
+                </div>
+
+
+                <div class="stat">
+
+                    <span>
+                        🍗 Hunger
+                    </span>
+
+                    <strong id="hunger">
+                        50
+                    </strong>%
+
+                </div>
+
+
+                <div class="stat">
+
+                    <span>
+                        ⚡ Energy
+                    </span>
+
+                    <strong id="energy">
+                        80
+                    </strong>%
+
+                </div>
+
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+
+                <button id="feedButton" onclick="feed()">
+                    🍗 Feed
+                </button>
+
+
+                <button onclick="pet()">
+                    🖐️ Pet
+                </button>
+
+
+                <button id="playButton" onclick="play()">
+                    🧶 Play
+                </button>
+
+
+                <button id="sleepButton" onclick="sleep()">
+                    😴 Sleep
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+
+        /* =========================
+           MOCHI'S STATS
+        ========================= */
+
+        let happiness = 50;
+
+        let hunger = 50;
+
+        let energy = 80;
+
+
+        /* =========================
+           SLEEPING
+        ========================= */
+
+        let sleeping = false;
+
+
+        /* =========================
+           RANDOM MESSAGES
+        ========================= */
+
+        const happyMessages = [
+
+            "I'm so happy! 🥹",
+
+            "I love hanging out with you! 💗",
+
+            "Best day ever! ✨",
+
+            "Hehe! 🐾",
+
+            "You're my favorite! 💕"
+
+        ];
+
+
+        const hungryMessages = [
+
+            "I'm hungry... 🥺",
+
+            "Can I have food? 🍗",
+
+            "My tummy is empty... 😭",
+
+            "I need snacks... 👀"
+
+        ];
+
+
+        const tiredMessages = [
+
+            "I'm sleepy... 😴",
+
+            "I need a nap... 🥱",
+
+            "Can we sleep? 🌙",
+
+            "My eyes are getting heavy... 💤"
+
+        ];
+
+
+        const randomThoughts = [
+
+            "Hmm... 🤔",
+
+            "What's over there? 👀",
+
+            "Hehe 🐾",
+
+            "I'm bored... 🥺",
+
+            "Pet meee 💗",
+
+            "I wonder what's for dinner... 🍗",
+
+            "La la la~ ✨",
+
+            "Do you like my room? 🏠",
+
+            "I'm just chilling 😌",
+
+            "What are you doing? 👀"
+
+        ];
+
+
+        /* =========================
+           RANDOM MESSAGE
+        ========================= */
+
+        function randomMessage(array) {
+
+            return array[
+                Math.floor(
+                    Math.random() * array.length
+                )
+            ];
+
+        }
+
+
+        /* =========================
+           UPDATE STATS
+        ========================= */
+
+        function updateStats() {
+
+
+            happiness =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        happiness
+                    )
+                );
+
+
+            hunger =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        hunger
+                    )
+                );
+
+
+            energy =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        energy
+                    )
+                );
+
+
+            document.getElementById(
+                "happiness"
+            ).textContent =
+                happiness;
+
+
+            document.getElementById(
+                "hunger"
+            ).textContent =
+                hunger;
+
+
+            document.getElementById(
+                "energy"
+            ).textContent =
+                energy;
+
+
+            updateButtons();
+
+        }
+
+
+        /* =========================
+           EXPRESSION
+        ========================= */
+
+        function updateExpression() {
+
+
+            const mochiImage =
+                document.getElementById(
+                    "mochiImage"
+                );
+
+
+            const mochi =
+                document.getElementById(
+                    "mochi"
+                );
+
+
+            mochi.classList.remove(
+                "happy",
+                "hungry",
+                "sleepy",
+                "grumpy"
+            );
+
+
+            if (hunger >= 80) {
+
+                mochiImage.src =
+                    "Mochi/hungry.png";
+
+                mochi.classList.add(
+                    "hungry"
+                );
+
+            }
+
+
+            else if (energy <= 20) {
+
+                mochiImage.src =
+                    "Mochi/tired.png";
+
+                mochi.classList.add(
+                    "sleepy"
+                );
+
+            }
+
+
+            else if (happiness <= 25) {
+
+                mochiImage.src =
+                    "Mochi/grumpy.png";
+
+                mochi.classList.add(
+                    "grumpy"
+                );
+
+            }
+
+
+            else if (happiness >= 80) {
+
+                mochiImage.src =
+                    "Mochi/happy.png";
+
+                mochi.classList.add(
+                    "happy"
+                );
+
+            }
+
+
+            else {
+
+                mochiImage.src =
+                    "Mochi/normal.png";
+
+            }
+
+        }
+
+
+        /* =========================
+           MOOD
+        ========================= */
+
+        function updateMood() {
+
+
+            const mood =
+                document.getElementById(
+                    "mood"
+                );
+
+
+            if (sleeping) {
+
+                mood.textContent =
+                    "Mochi is sleeping peacefully... 💤";
+
+            }
+
+
+            else if (hunger >= 80) {
+
+                mood.textContent =
+                    "Mochi is starving! 🍗";
+
+            }
+
+
+            else if (energy <= 20) {
+
+                mood.textContent =
+                    "Mochi is exhausted... 😴";
+
+            }
+
+
+            else if (happiness >= 80) {
+
+                mood.textContent =
+                    "Mochi is extremely happy! 💗";
+
+            }
+
+
+            else if (happiness <= 25) {
+
+                mood.textContent =
+                    "Mochi feels a little sad... 🥺";
+
+            }
+
+
+            else {
+
+                mood.textContent =
+                    "Mochi is feeling okay. 🐾";
+
+            }
+
+        }
+
+
+        /* =========================
+           BUTTON CONTROL
+        ========================= */
+
+        function updateButtons() {
+
+
+            document.getElementById(
+                "feedButton"
+            ).disabled =
+                hunger <= 0;
+
+
+            document.getElementById(
+                "playButton"
+            ).disabled =
+                energy < 15;
+
+
+            document.getElementById(
+                "sleepButton"
+            ).disabled =
+                sleeping;
+
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        function message(text) {
+
+            document.getElementById(
+                "message"
+            ).textContent =
+                text;
+
+        }
+
+
+        /* =========================
+           BOUNCE
+        ========================= */
+
+        function animateMochi() {
+
+
+            const mochi =
+                document.getElementById(
+                    "mochi"
+                );
+
+
+            mochi.classList.remove(
+                "bounce"
+            );
+
+
+            void mochi.offsetWidth;
+
+
+            mochi.classList.add(
+                "bounce"
+            );
+
+        }
+
+
+        /* =========================
+           FEED
+        ========================= */
+
+        function feed() {
+
+
+            if (hunger <= 0) {
+
+                message(
+                    "I'm already full! 😽"
+                );
+
+                return;
+
+            }
+
+
+            hunger -= 20;
+
+            happiness += 10;
+
+
+            message(
+                "Yummm! 🍗 Thank you!"
+            );
+
+
+            animateMochi();
+
+
+            updateStats();
+
+            updateExpression();
+
+            updateMood();
+
+        }
+
+
+        /* =========================
+           PET
+        ========================= */
+
+        function pet() {
+
+
+            if (sleeping) {
+
+                message(
+                    "Shhh... Mochi is sleeping 💤"
+                );
+
+                return;
+
+            }
+
+
+            happiness += 5;
+
+
+            if (hunger >= 80) {
+
+                message(
+                    "Pet me after snacks please 🥺🍗"
+                );
+
+            }
+
+            else if (energy <= 20) {
+
+                message(
+                    "Mmm... sleepy pets... 😴"
+                );
+
+            }
+
+            else {
+
+                message(
+                    randomMessage(
+                        happyMessages
+                    )
+                );
+
+            }
+
+
+            animateMochi();
+
+
+            updateStats();
+
+            updateExpression();
+
+            updateMood();
+
+        }
+
+
+        /* =========================
+           PLAY
+        ========================= */
+
+        function play() {
+
+
+            if (sleeping) {
+
+                message(
+                    "Mochi is sleeping! 💤"
+                );
+
+                return;
+
+            }
+
+
+            if (energy < 15) {
+
+                message(
+                    "I'm too tired to play... 😴"
+                );
+
+                return;
+
+            }
+
+
+            happiness += 15;
+
+            energy -= 15;
+
+            hunger += 10;
+
+
+            message(
+                "ZOOMIES!!! 🧶"
+            );
+
+
+            animateMochi();
+
+
+            updateStats();
+
+            updateExpression();
+
+            updateMood();
+
+        }
+
+
+        /* =========================
+           SLEEP
+        ========================= */
+
+        function sleep() {
+
+
+            if (sleeping) {
+
+                return;
+
+            }
+
+
+            sleeping = true;
+
+
+            const mochi =
+                document.getElementById(
+                    "mochi"
+                );
+
+
+            mochi.classList.remove(
+                "idle"
+            );
+
+
+            stopWalking();
+
+
+            message(
+                "Zzzzz... 🌙😴"
+            );
+
+
+            updateMood();
+
+            updateButtons();
+
+
+            /* Slowly restore energy */
+
+            const sleepTimer =
+                setInterval(() => {
+
+
+                    energy += 10;
+
+                    hunger += 2;
+
+
+                    updateStats();
+
+
+                    if (energy >= 100) {
+
+                        energy = 100;
+
+
+                        clearInterval(
+                            sleepTimer
+                        );
+
+
+                        sleeping = false;
+
+
+                        message(
+                            "Good morning! ☀️🐾"
+                        );
+
+
+                        mochi.classList.add(
+                            "idle"
+                        );
+
+
+                        updateExpression();
+
+                        updateMood();
+
+                        updateButtons();
+
+
+                        scheduleNextWander();
+
+                    }
+
+
+                }, 1000);
+
+        }
+
+
+        /* =========================
+           TIME PASSING
+        ========================= */
+
+        function timePasses() {
+
+
+            if (sleeping) {
+
+                return;
+
+            }
+
+
+            hunger += 3;
+
+            energy -= 2;
+
+
+            if (hunger >= 70) {
+
+                happiness -= 3;
+
+            }
+
+
+            if (energy <= 20) {
+
+                happiness -= 2;
+
+            }
+
+
+            updateStats();
+
+            updateExpression();
+
+            updateMood();
+
+
+            /* RANDOM THOUGHT */
+
+            if (
+                Math.random() < 0.35
+            ) {
+
+
+                if (hunger >= 70) {
+
+                    message(
+                        randomMessage(
+                            hungryMessages
+                        )
+                    );
+
+                }
+
+
+                else if (
+                    energy <= 30
+                ) {
+
+                    message(
+                        randomMessage(
+                            tiredMessages
+                        )
+                    );
+
+                }
+
+
+                else if (
+                    happiness >= 80
+                ) {
+
+                    message(
+                        randomMessage(
+                            happyMessages
+                        )
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /* =========================
+           DAY / NIGHT
+        ========================= */
+
+        let isNight = false;
+
+
+        function changeTime() {
+
+
+            isNight = !isNight;
+
+
+            const room =
+                document.getElementById(
+                    "room"
+                );
+
+
+            if (isNight) {
+
+                room.classList.add(
+                    "night"
+                );
+
+            }
+
+            else {
+
+                room.classList.remove(
+                    "night"
+                );
+
+            }
+
+        }
+
+
+        /* DAY/NIGHT EVERY MINUTE */
+
+        setInterval(
+            changeTime,
+            60000
+        );
+
+
+        /* NEEDS EVERY 30 SECONDS */
+
+        setInterval(
+            timePasses,
+            30000
+        );
+
+
+        /* =========================
+           WALKING ANIMATION
+        ========================= */
+
+        let walking = false;
+
+        let walkFrame = 1;
+
+        let walkTimer = null;
+
+
+        function startWalking(direction) {
+
+
+            if (
+                walking ||
+                sleeping ||
+                energy <= 20
+            ) {
+
+                return;
+
+            }
+
+
+            walking = true;
+
+
+            const mochi =
+                document.getElementById(
+                    "mochi"
+                );
+
+
+            const mochiImage =
+                document.getElementById(
+                    "mochiImage"
+                );
+
+
+            /* Stop idle animation */
+
+            mochi.classList.remove(
+                "idle"
+            );
+
+
+            /* Choose frames */
+
+            let frame =
+                direction === "right"
+                    ? 1
+                    : 4;
+
+
+            /* Show first frame immediately */
+
+            mochiImage.src =
+                `Mochi/walk${frame}.png`;
+
+
+            /* Continue animation */
+
+            walkTimer =
+                setInterval(() => {
+
+
+                    frame++;
+
+
+                    if (
+                        direction === "right" &&
+                        frame > 3
+                    ) {
+
+                        frame = 1;
+
+                    }
+
+
+                    if (
+                        direction === "left" &&
+                        frame > 6
+                    ) {
+
+                        frame = 4;
+
+                    }
+
+
+                    mochiImage.src =
+                        `Mochi/walk${frame}.png`;
+
+
+                }, 120);
+
+        }
+
+
+        function stopWalking() {
+
+
+            walking = false;
+
+
+            clearInterval(
+                walkTimer
+            );
+
+
+            walkTimer = null;
+
+
+            updateExpression();
+
+
+            if (!sleeping) {
+
+                document
+                    .getElementById("mochi")
+                    .classList.add(
+                        "idle"
+                    );
+
+            }
+
+        }
+
+
+        /* =========================
+           WANDERING
+        ========================= */
+
+        function wander() {
+
+
+            if (
+                sleeping ||
+                energy <= 20 ||
+                walking
+            ) {
+
+                return;
+
+            }
+
+
+            const mochi =
+                document.getElementById(
+                    "mochi"
+                );
+
+
+            const room =
+                document.getElementById(
+                    "room"
+                );
+
+
+            const roomWidth =
+                room.clientWidth;
+
+
+            const currentLeft =
+                mochi.offsetLeft;
+
+
+            /* Random LEFT/RIGHT destination */
+
+            const randomLeft =
+                Math.random() *
+                (roomWidth - 160)
+                + 80;
+
+
+            /* Decide direction */
+
+            let direction;
+
+
+            if (
+                randomLeft >
+                currentLeft
+            ) {
+
+                direction = "right";
+
+            }
+
+            else {
+
+                direction = "left";
+
+            }
+
+
+            /* Start walking */
+
+            startWalking(
+                direction
+            );
+
+
+            /* Move horizontally */
+
+            mochi.style.left =
+                randomLeft + "px";
+
+
+            /* Stay on floor */
+
+            mochi.style.bottom =
+                "120px";
+
+
+            /* Stop after movement */
+
+            setTimeout(() => {
+
+
+                if (walking) {
+
+                    stopWalking();
+
+                }
+
+
+            }, 2100);
+
+        }
+
+
+        /* =========================
+           RANDOM WANDERING TIMER
+        ========================= */
+
+        function scheduleNextWander() {
+
+
+            const randomDelay =
+                Math.random() *
+                5000
+                + 5000;
+
+
+            setTimeout(() => {
+
+
+                wander();
+
+
+                scheduleNextWander();
+
+
+            }, randomDelay);
+
+        }
+
+
+        /* =========================
+           RANDOM THOUGHTS
+        ========================= */
+
+        function randomThought() {
+
+
+            if (
+                sleeping ||
+                walking
+            ) {
+
+                return;
+
+            }
+
+
+            /* Don't interrupt important messages too often */
+
+            if (
+                Math.random() < 0.5
+            ) {
+
+                return;
+
+            }
+
+
+            message(
+                randomMessage(
+                    randomThoughts
+                )
+            );
+
+        }
+
+
+        /* Random thoughts every 12 seconds */
+
+        setInterval(
+            randomThought,
+            12000
+        );
+
+
+        /* =========================
+           START GAME
+        ========================= */
+
+        updateStats();
+
+        updateExpression();
+
+        updateMood();
+
+
+        /* Start wandering */
+
+        scheduleNextWander();
+
+
+    </script>
+
+
+</body>
+
+</html>
